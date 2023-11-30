@@ -6,19 +6,26 @@ session_start();
 $user = $_SESSION['user'];
 $message = null;
 
+// Función para eliminar una pizza por su ID
 function deletePizza($conn, $id){
+     // Preparar y ejecutar la consulta para eliminar la pizza de la base de datos
     $query = $conn->prepare("DELETE FROM pizzas WHERE id = :id");
     $query->bindParam(":id", $id);
     return $query->execute();
 }
 
+// Función para obtener los detalles de una pizza por su ID para editarla
 function editPizza($conn, $id){
+      // Preparar y ejecutar la consulta para obtener los detalles de la pizza por su ID
     $query = $conn->prepare("SELECT * FROM pizzas WHERE id = :id");
     $query->bindParam(":id", $id);
     $query->execute();
+    // Devuelve los detalles de la pizza como un array asociativo
     return $query->fetch(PDO::FETCH_ASSOC);
 }
 
+
+// Función para insertar una nueva pizza en la base de datos
 function insertPizza($conn, $name, $cost, $price, $ingredients){
     if(isset($name, $cost, $price, $ingredients)){
         $query = $conn->prepare("INSERT INTO pizzas (name, cost, price, ingredients) VALUES (:name, :cost, :price, :ingredients)");
@@ -26,7 +33,7 @@ function insertPizza($conn, $name, $cost, $price, $ingredients){
         $query->bindParam(":cost", $cost);
         $query->bindParam(":price", $price);
         $query->bindParam(":ingredients", $ingredients);
-        return $query->execute();
+        return $query->execute();// Devuelve true si la inserción fue exitosa, de lo contrario, devuelve false
     }   
 }
 ?>
@@ -36,7 +43,10 @@ function insertPizza($conn, $name, $cost, $price, $ingredients){
         <a href='./login.php' class='log-out'><i class='fa-solid fa-right-from-bracket'></i></a>
     </div>
 <?php
+
+// Función para listar todas las pizzas disponibles
 function listPizzas($conn){
+       // Lógica para manejar las operaciones POST como eliminar, editar e insertar pizzas
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if(isset($_POST['delete'])){
             $id = $_POST['delete_id'];
@@ -116,7 +126,8 @@ function listPizzas($conn){
             <button class='btn insertar' type='submit' name='<?= ($pizzaToEdit ? "update" : "insert") ?>' id='insert-btn'><?= ($pizzaToEdit ? "Editar" : "Insertar") ?> Pizza</button>
         </div>
     </form>
-    <h2 class='heading'>Our Pizzas</h2>
+    <h2 class='heading'>Nuestras Pizzas</h2>
+     <!-- Consulta las pizzas disponibles en la base de datos y muestra una tabla HTML con ellas -->
     <table border='1' class='userTable'>
         <tr>
             <th>Nombre</th>
@@ -147,7 +158,9 @@ function listPizzas($conn){
     echo "</table>";    
 }
 
+// Función para obtener las pizzas más vendidas
 function getBestSellingPizzas($conn){
+      // Consulta la tabla de pedidos para obtener los detalles de las pizzas más vendidas
     $query = $conn->prepare("SELECT order_details FROM pedidos");
     $query->execute();
     $results = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -167,7 +180,7 @@ function getBestSellingPizzas($conn){
 
     arsort($soldPizzas);
 
-    // Get the names of the pizzas corresponding to the best-selling IDs
+    // Obtener los nombres de las pizzas correspondientes a los IDs más vendidos
     $pizzaNames = [];
     foreach ($soldPizzas as $pizza_id => $quantity) {
         $query = $conn->prepare("SELECT name FROM pizzas WHERE id = :id");

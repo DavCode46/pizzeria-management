@@ -1,7 +1,8 @@
 <?php
 
+    // Función para conectar a la base de datos
     function connectDB(){
-            $conexion = "mysql:dbname=data_base1;host=127.0.0.1";
+            $conexion = "mysql:dbname=pizzeria_DB;host=127.0.0.1";
             $user = "root";
             $password = "";
 

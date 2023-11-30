@@ -1,12 +1,19 @@
 <?php 
+// Incluir el archivo para la conexión a la base de datos
 include("./connectDB.php");
 
+// Iniciar la sesión
 session_start();
+
+// Establecer la conexión a la base de datos
 $conn = connectDB();
 
+// Obtener el nombre de usuario de la sesión
 $user = $_SESSION['user'];
 
+// Verificar si la conexión a la base de datos fue exitosa
 if($conn){
+    // Consultar todas las pizzas ordenadas por nombre
     $query = "SELECT * FROM pizzas ORDER BY name";
     $statement = $conn->prepare($query);
     $statement->execute();
@@ -14,6 +21,7 @@ if($conn){
 
     ?>
 
+    <!-- Estructura HTML para mostrar el menú de pizzas -->
     <div class="header">
         <img src="../assets/img/logo.png" alt="Pizza logo" class="logo">
         <h1 class="animation">
@@ -35,6 +43,7 @@ if($conn){
         <?php endforeach; ?>
     </div>
 
+    <!-- Formulario para seleccionar la cantidad de pizzas -->
     <?php if(count($pizzas) > 0): ?>
         <form method="post" action="orders.php">
             <table border="1" class="userTable">
@@ -58,9 +67,10 @@ if($conn){
             </table>
         </form>
     <?php else: ?>
-        <p>No results found</p>
+        <p>No se encontraron resultados</p>
     <?php endif;
 
+    // Cerrar la conexión a la base de datos
     $conn = null;
 } else {
     echo "Error al conectar a la Base de datos";
@@ -76,6 +86,7 @@ if($conn){
     <link rel="stylesheet" href="../styles/styles.css">
 </head>
 <body>
+    <!-- Incluir los scripts -->
     <script type="module" src="../scripts/main.js"></script>
     <script src="https://kit.fontawesome.com/c3db1c8a5f.js" crossorigin="anonymous"></script>
 </body>
