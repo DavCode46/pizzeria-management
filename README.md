@@ -1,6 +1,7 @@
 # Gestión de pizzería
 
-**Autor**: ***David Menéndez Blanco***
+**Autor:** ***David Menéndez Blanco*** <br>
+**GitHub:** https://github.com/DavidMenendezBlanco/pizzeria-management.git
 
 ## Estructura de proyecto:
 1. api
